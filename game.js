@@ -51,6 +51,32 @@ function checkCollision(rect1, rect2) {
            rect1.y + rect1.height > rect2.y;
 }
 
+// Add touch event listeners
+canvas.addEventListener('touchstart', handleTouch);
+canvas.addEventListener('touchmove', handleTouch);
+
+function handleTouch(event) {
+    event.preventDefault(); // Prevent scrolling when touching the canvas
+    
+    const touch = event.touches[0];
+    const canvasRect = canvas.getBoundingClientRect();
+    const touchX = touch.clientX - canvasRect.left;
+    
+    // If touch is on the right half of the screen, move right
+    if (touchX > canvas.width / 2) {
+        plane.dx = 5; // Move right
+    }
+    // If touch is on the left half of the screen, move left
+    else {
+        plane.dx = -5; // Move left
+    }
+}
+
+// Add touchend event to stop movement when user stops touching
+canvas.addEventListener('touchend', function() {
+    plane.dx = 0;
+});
+
 // Oyun döngüsü
 function gameLoop() {
     if (gameOver) {
