@@ -33,12 +33,43 @@ document.addEventListener('keyup', (e) => {
     keys[e.key] = false;
 });
 
+// Butonları seç
+const leftBtn = document.getElementById('left-btn');
+const rightBtn = document.getElementById('right-btn');
+const refreshBtn = document.getElementById('refresh-btn');
+const scoreDisplay = document.getElementById('score-display');
+
+// Buton kontrolleri
+let isLeftPressed = false;
+let isRightPressed = false;
+
+leftBtn.addEventListener('mousedown', () => isLeftPressed = true);
+leftBtn.addEventListener('mouseup', () => isLeftPressed = false);
+leftBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    isLeftPressed = true;
+});
+leftBtn.addEventListener('touchend', () => isLeftPressed = false);
+
+rightBtn.addEventListener('mousedown', () => isRightPressed = true);
+rightBtn.addEventListener('mouseup', () => isRightPressed = false);
+rightBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    isRightPressed = true;
+});
+rightBtn.addEventListener('touchend', () => isRightPressed = false);
+
+// Yenile butonu
+refreshBtn.addEventListener('click', () => {
+    location.reload();
+});
+
 // Uçağı hareket ettirme
 function movePlane() {
-    if (keys['ArrowLeft'] && plane.x > 0) {
+    if ((keys['ArrowLeft'] || isLeftPressed) && plane.x > 0) {
         plane.x -= plane.speed;
     }
-    if (keys['ArrowRight'] && plane.x < canvas.width - plane.width) {
+    if ((keys['ArrowRight'] || isRightPressed) && plane.x < canvas.width - plane.width) {
         plane.x += plane.speed;
     }
 }
@@ -51,31 +82,10 @@ function checkCollision(rect1, rect2) {
            rect1.y + rect1.height > rect2.y;
 }
 
-// Add touch event listeners
-canvas.addEventListener('touchstart', handleTouch);
-canvas.addEventListener('touchmove', handleTouch);
-
-function handleTouch(event) {
-    event.preventDefault(); // Prevent scrolling when touching the canvas
-    
-    const touch = event.touches[0];
-    const canvasRect = canvas.getBoundingClientRect();
-    const touchX = touch.clientX - canvasRect.left;
-    
-    // If touch is on the right half of the screen, move right
-    if (touchX > canvas.width / 2) {
-        plane.dx = 5; // Move right
-    }
-    // If touch is on the left half of the screen, move left
-    else {
-        plane.dx = -5; // Move left
-    }
+// Skor güncelleme fonksiyonu
+function updateScore() {
+    scoreDisplay.textContent = 'Skor: ' + score;
 }
-
-// Add touchend event to stop movement when user stops touching
-canvas.addEventListener('touchend', function() {
-    plane.dx = 0;
-});
 
 // Oyun döngüsü
 function gameLoop() {
@@ -116,10 +126,8 @@ function gameLoop() {
         }
     });
 
-    // Skoru göster
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Arial';
-    ctx.fillText('Skor: ' + score, 10, 30);
+    // Skoru güncelle
+    updateScore();
 
     movePlane();
     requestAnimationFrame(gameLoop);

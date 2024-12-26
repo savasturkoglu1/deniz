@@ -9,10 +9,38 @@
             border: 2px solid black;
             background-color: #87CEEB;
         }
+        #controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .game-btn {
+            padding: 15px 30px;
+            margin: 0 10px;
+            font-size: 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        #refresh-btn {
+            background-color: #f44336;
+        }
+        #score-display {
+            font-size: 24px;
+            margin: 10px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <div id="score-display">Skor: 0</div>
     <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div id="controls">
+        <button id="left-btn" class="game-btn">←</button>
+        <button id="refresh-btn" class="game-btn">Yenile</button>
+        <button id="right-btn" class="game-btn">→</button>
+    </div>
     <script src="game.js"></script>
 </body>
 </html>
